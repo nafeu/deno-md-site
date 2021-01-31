@@ -6,6 +6,21 @@ An example static site generator built with Deno. Made for a blog post.
 
 ## Usage
 
+Make sure you've templated your website as instructed below, then you can use:
+
+```
+deno run --allow-read --unstable --allow-write https://raw.githubusercontent.com/nafeu/deno-md-site/main/main.ts example-site.md build
+```
+
+Where you can replace `example-site.md` with your site's `.md` file and replace `build` with your specified build path.
+
+#### Local Installation (optional)
+
+```
+git clone https://github.com/nafeu/deno-md-site.git
+cd deno-md-site
+```
+
 #### Templating Your Website
 
 Create a markdown file:
@@ -21,6 +36,7 @@ And format it like so:
 title: [WEBSITE_TITLE]
 styles: >
   /* Add Optional CSS Here */
+favicon: 🦕
 ---
 /home:Home
 
@@ -41,14 +57,14 @@ layout:footer
 [FOOTER_CONTENT]
 ```
 
-Where the templating works as follows:
-- YAML frontmatter is used to declare a `[WEBSITE_TITLE]` of your choice as well as css styles respectively
+#### Templating Rules
+- [YAML Front Matter](https://jekyllrb.com/docs/front-matter/) is used to declare a `[WEBSITE_TITLE]`, optional css styles and an optional emoji favicon
 - Triple plus signs (`+++`) are used to separate pages and layout components
 - `[PAGE_PATH]` is the url path to a page
 - `[PAGE_TITLE]` is the title of the current page
 - `[PAGE_CONTENT]` is the content of that page (written in markdown)
 
-Check out the `example-site.md` file included in this repo for a clear example.
+Check out the `example-site.md` file and `docs/` folder included in this repo for a clear example. Note that for the `docs` folder has been manually formatted the HTML so it would be easier to read, the actual build renders HTML that works but isn't as human-readable.
 
 #### Generating Your Website
 
@@ -57,6 +73,8 @@ Target your templated `.md` file and specify a build path like so:
 ```
 deno run --allow-read --unstable --allow-write main.ts example-site.md build
 ```
+
+You can then use `cd build` to see your generated website.
 
 ## Development
 

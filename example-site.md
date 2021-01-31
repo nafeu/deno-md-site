@@ -55,4 +55,4 @@ Get in touch at [nafeu.nasir@gmail.com](mailto:nafeu.nasir@gmail.com)
 +++
 layout:footer
 
-[[source]](https://github.com/nafeu) Made with ♥ by [Nafeu Nasir](http://nafeu.com).
+[[source]](https://github.com/nafeu/deno-md-site) Made with ♥ by [Nafeu Nasir](https://nafeu.com).

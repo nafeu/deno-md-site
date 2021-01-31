@@ -42,7 +42,7 @@ const fileContent = decoder.decode(Deno.readFileSync(filename));
 const components = fileContent.split(COMPONENT_DELIMITER);
 
 const { meta: frontMatter } = Marked.parse(components[FIRST_ITEM_INDEX]);
-const { title, styles } = frontMatter;
+const { title, styles, favicon } = frontMatter;
 
 /* 2. Construct page data from components */
 for (const component of components) {
@@ -70,6 +70,12 @@ const getStylesheetHref = (path: string) => {
   return isHomePath(path) ? STYLESHEET_PATH : `../${STYLESHEET_PATH}`;
 }
 
+const getFaviconSvg = (favicon: string) => `
+  <svg xmlns="http://www.w3.org/2000/svg">
+    <text y="32" font-size="32">${favicon ? favicon : '🦕'}</text>
+  </svg>
+`
+
 const getNavigation = (currentPath: string) => `
   <div id="nav">
     ${pages.map(({ path, name }) => {
@@ -90,6 +96,7 @@ const getHtmlByPage = ({ path, name, html }: Page) => `
   <head>
     <title>${name} | ${title}</title>
     <link rel="stylesheet" href="${getStylesheetHref(path)}">
+    <link rel="icon" href="/favicon.svg">
   </head>
     <body>
       <div id="title">
@@ -122,3 +129,4 @@ for (const page of pages) {
 
 /* 5. Build additional asset files */
 Deno.writeTextFileSync(`${buildPath}/styles.css`, styles ? styles : '');
+Deno.writeTextFileSync(`${buildPath}/favicon.svg`, getFaviconSvg(favicon));
