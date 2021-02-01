@@ -1,6 +1,8 @@
+/* Section: Dependencies */
 import { Marked } from 'https://deno.land/x/markdown@v2.0.0/mod.ts';
 import { ensureFileSync } from "https://deno.land/std@0.84.0/fs/mod.ts";
 
+/* Section: Constants */
 const COMPONENT_DELIMITER = '+++\n';
 const COMPONENT_TYPE_PATTERN = /<\S>(.*?)\:(.*?)<\/\S>/g;
 const HTML_CONTENT_PATTERN = /\n(.*)/gs;
@@ -13,6 +15,7 @@ const SECOND_ITEM_INDEX = 1;
 const HOME_PATH = '/home';
 const STYLESHEET_PATH = 'styles.css';
 
+/* Section: Interfaces and Globals */
 interface Page {
   path: string,
   name: string,
@@ -26,7 +29,7 @@ interface Layout {
 let pages: Array<Page> = [];
 let layout: Layout = {};
 
-/* 0. Grab CLI arguments */
+/* Step 0: Grab CLI arguments */
 const filename = Deno.args[FIRST_ITEM_INDEX];
 const buildPath = Deno.args[SECOND_ITEM_INDEX] || './build';
 
@@ -35,7 +38,7 @@ if (!filename) {
   Deno.exit(1);
 }
 
-/* 1. Parse metadata and components from markdown file */
+/* Step 1: Parse metadata and components from markdown file */
 const decoder = new TextDecoder("utf-8");
 
 const fileContent = decoder.decode(Deno.readFileSync(filename));
@@ -44,7 +47,7 @@ const components = fileContent.split(COMPONENT_DELIMITER);
 const { meta: frontMatter } = Marked.parse(components[FIRST_ITEM_INDEX]);
 const { title, styles, favicon } = frontMatter;
 
-/* 2. Construct page data from components */
+/* Step 2: Construct page data from components */
 for (const component of components) {
   const { content } = Marked.parse(component);
 
@@ -63,7 +66,7 @@ for (const component of components) {
   }
 }
 
-/* 3. Generate templates for html content */
+/* Step 3: Generate templates for html content */
 const isHomePath = (path: string) => path === HOME_PATH;
 
 const getStylesheetHref = (path: string) => {
@@ -111,7 +114,7 @@ const getHtmlByPage = ({ path, name, html }: Page) => `
   </html>
 `;
 
-/* 4. Build pages into .html files with appropriate paths */
+/* Step 4: Build pages into .html files with appropriate paths */
 for (const page of pages) {
   const { path } = page;
 
@@ -127,6 +130,6 @@ for (const page of pages) {
   Deno.writeTextFileSync(outputPath, getHtmlByPage(page));
 }
 
-/* 5. Build additional asset files */
+/* Step 5: Build additional asset files */
 Deno.writeTextFileSync(`${buildPath}/styles.css`, styles ? styles : '');
 Deno.writeTextFileSync(`${buildPath}/favicon.svg`, getFaviconSvg(favicon));
